@@ -3,6 +3,7 @@
 Vulnerabilites to target:
 - CSRF
 - XSS (Stored / Reflected)
+- 
 
 
 Some Ideas
@@ -18,4 +19,4 @@ General program for workshop
 - Insert ads for NUS GH
 
 
- 
+Link to Slides: https://docs.google.com/presentation/d/12Nu-7dxrrnRzQPQlM6vAUpkDPG2eF9J9FoXwvi_KJpg/edit?usp=sharing
