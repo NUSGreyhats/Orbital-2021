@@ -3,7 +3,7 @@
 Vulnerabilites to target:
 - CSRF
 - XSS (Stored / Reflected)
-- 
+- SQLI
 
 
 Some Ideas
