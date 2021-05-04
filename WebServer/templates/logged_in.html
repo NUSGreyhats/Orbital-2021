@@ -1,0 +1,18 @@
+{% extends 'nav.html' %}
+{% block title%}Welcome{% endblock %}
+{% block content %}
+<div>
+    <h1>Welcome {{ username }}</h1>
+    <p>Congratz! You have successfully logged in!</p>
+    <p>
+        You logged in because of this query:
+        <br>
+        <code>
+            {{query}}
+        </code>
+    </p>
+    <br>
+    <a href='/sqli' class='btn btn-primary'>Logout</a>
+</div>
+{% endblock %}
+
