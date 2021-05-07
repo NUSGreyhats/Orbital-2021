@@ -1,8 +1,22 @@
 {% extends "nav.html" %}
-{% block title %} Sample Orbital Project {% endblock %}
+{% block title %} Vulnerable Orbital Project {% endblock %}
 
 {% block content %}
 <div class='container'>
-    <h1>Sample Website for Home page</h1>
+    <h1>Vulnerable Orbital Project</h1>
+    <div class='container'>
+        <p>
+            For details on how each of the vulnerability is exploited and how they can be patched, take a look at the slides below
+            <br />
+            <a href='#' class='btn btn-primary'>Slides</a>
+        </p>
+    </div>
+    <hr/>
+    <div class='list-group container'>
+        <a class='list-group-item list-group-item-action' href='/sqli'>SQL Injection</a>
+        <a class='list-group-item list-group-item-action' href='/csrf'>CSRF</a>
+        <a class='list-group-item list-group-item-action' href='/sxss'>Stored XSS</a>
+        <a class='list-group-item list-group-item-action' href='/rxss'>Reflected XSS</a>
+    </div>
 </div>
 {% endblock %}
