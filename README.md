@@ -15,10 +15,10 @@
 
 # Goals of the workshop
 Showcase vulnerabilites:
+- SQLI (SQL Injection)
 - CSRF (Cross Site Request Forgery)
 - Stored XSS (Stored Cross Site Scripting)
 - Reflected XSS (Reflected Cross Site Scripting)
-- SQLI (SQL Injection)
 
 
 # Timeline for workshop
