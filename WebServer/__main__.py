@@ -105,7 +105,6 @@ def stored_xss():
 
     # Get form data
     data = request.form
-    print(data)
 
     # Check if user wants to clear data
     if data.get('clear', None):
