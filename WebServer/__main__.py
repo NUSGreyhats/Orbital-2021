@@ -10,12 +10,16 @@ app.secret_key = 'MYSECRETKEY'
 DB_PATH = os.path.join('data', 'data.db')
 REGISTER_QUERY = 'INSERT INTO users VALUES ({}, {})'
 BLANK_ERROR_MSG = 'Please do not leave any fields blank!'
-CREATE_QUERY = 'CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)'
+CREATE_QUERY = 'CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT, balance INTEGER)'
 LOGIN_QUERY = 'SELECT * FROM users WHERE username = \'{}\' AND password = \'{}\''
 
 OTHER_DB_PATH = os.path.join('data', 'data2.db')
 CREATE_PLANT_QUERY = 'CREATE TABLE IF NOT EXISTS plants (name TEXT)'
 SEARCH_QUERY = 'SELECT * FROM plants p WHERE p.name LIKE \'%\' || ? || \'%\''
+
+INCREASE_BALANCE = 'UPDATE users SET balance = balance + ? WHERE username = ? '
+DECREASE_BALANCE = 'UPDATE users SET balance = balance - ? WHERE username = ? '
+FIND_USER = 'SELECT COUNT(*) FROM users WHERE username = ?'
 
 
 # Database methods
@@ -33,6 +37,8 @@ def create_db() -> None:
         # Create the table if it does not exist
         cur = db.cursor()
         cur.execute(CREATE_PLANT_QUERY)
+        cur.execute(CREATE_QUERY)
+        
 
 
 @app.route('/')
@@ -40,9 +46,8 @@ def index():
     """The index page for the website"""
     return render_template('index.html')
 
+
 # Reflected XSS Methods
-
-
 @app.route('/rxss', methods=['POST', 'GET'])
 def reflected_xss():
     """Page to showcase Reflected XSS"""
@@ -55,7 +60,7 @@ def reflected_xss():
     # Check if input is empty
     if len(data) == 0 or len(data['query'].strip()) == 0:
         flash("Data cannot be empty")
-        return render_template('rxss.html')
+        return redirect('/rxss')
 
     # Fetch the data from the database
     with sqlite3.connect(OTHER_DB_PATH) as db:
@@ -77,6 +82,43 @@ def reflected_xss():
 @app.route('/csrf')
 def csrf():
     """Page to showcase CSRF"""
+    # Get the args
+    res = request.args
+    from_user = res.get('from_user', None)
+    to_user = res.get('to_user', None)
+    balance = res.get('amount', None)
+    
+    # Check for empty args
+    if None in (from_user, balance, to_user):
+        return render_template('csrf.html')
+
+    if not balance.isdigit():
+        flash('Please do not leave any fields blank')
+        return redirect('/csrf')
+    
+    # Transfer the balance
+    with sqlite3.connect(OTHER_DB_PATH) as db:
+        cur = db.cursor()
+
+        # Check if user 1 exists
+        cur.execute(FIND_USER, (to_user,))
+        res = cur.fetchall()
+        if res[0][0] == 0:
+            flash(f'{from_user} is not a valid user')
+            return redirect('csrf')
+
+        # Check if user 2 exists
+        cur.execute(FIND_USER, (from_user,))
+        res = cur.fetchall()
+        if res[0][0] == 0:
+            flash(f'{from_user} is not a valid user')
+            return redirect('csrf')
+
+        cur.execute(INCREASE_BALANCE, (balance, to_user))
+        cur.execute(DECREASE_BALANCE, (balance, from_user))
+        db.commit()
+
+    flash(f"Transferred {balance} from {from_user} to {to_user}")
     return render_template('csrf.html')
 
 
