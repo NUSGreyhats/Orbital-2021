@@ -1,4 +1,37 @@
 {% extends 'nav.html' %}
 {% block content %}
-<h1>Sample website for Stored XSS</h1>
+
+
+<h1>Forum</h1>
+
+{% autoescape False %}
+{% for post, author, time in posts %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ time }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">By {{ author }}</h6>
+        <p class="card-text">{{ post }}</p>
+    </div>
+</div>
+{% endfor %}
+{% endautoescape %}
+
+<!-- Form for the user to post -->
+<form action='/sxss' method="POST">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" placeholder="Bob" name="author">
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Post content</label>
+        <textarea class="form-control" id="content" rows="4" name='post'></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mb-3">Post</button>
+</form>
+<form action='/sxss' method="POST">
+    <input type="hidden" value='1' name='clear'>
+    <button type="submit" class="btn btn-primary mb-3">Clear Posts</button>
+</form>
+
+
 {% endblock %}
