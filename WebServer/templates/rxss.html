@@ -1,5 +1,33 @@
 {% extends 'nav.html' %}
 {% block title %} Reflected XSS {% endblock%}
 {% block content %}
-<h1>Sample website for Reflected XSS</h1>
+<h1>Content Search</h1>
+<form class="row g-3" action='/rxss' method="POST">
+    <div class="col-auto">
+        <label for="searchq" class="visually-hidden">Keywords:</label>
+        <input type="text" class="form-control" id="searchq" placeholder="Query", name='query'>
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-primary mb-3">Search</button>
+    </div>
+</form>
+{% if query %}
+
+    <!-- Off auto escape here for Reflected XSS to go through-->
+    {% autoescape false %}
+    <p>Your query is {{ query }}</p>
+    {% endautoescape %}
+
+    <!-- Load the results of the query -->
+    {% if not results %}
+        <h4>There are no results</h4>
+    {% else %}
+    <ul class='list-group'>
+        {% for result in results%}
+            <li class='list-group-item'>{{ result }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endif %}
+
 {% endblock %}
