@@ -12,6 +12,12 @@
 1. Run `python3 __main__.py`
 1. The webserver should be running and if you go to [`http://localhost:3000`](http://localhost:3000) you should be able to see the main page of the website.
 
+# To start `attacker.com` for the CSRF part
+1. Change directory to `attacker.com`
+2. Run `python3 __main__.py`
+3. The webserver should be running and if you go to [`http://localhost:3001`](http://localhost:3001) you should be able to see the main page of the website.
+
+
 
 # Goals of the workshop
 Showcase vulnerabilites:
