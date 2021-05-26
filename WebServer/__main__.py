@@ -1,38 +1,58 @@
 import os
 import sqlite3
 from flask import Flask, render_template, redirect, request, flash
+from util import FLASK_KEY, initial_users, initial_notes
 
 # Initialise the application
 app = Flask(__name__)
-app.secret_key = 'MYSECRETKEY'
+app.secret_key = FLASK_KEY
 
-# Contants
-DB_PATH = os.path.join('data', 'data.db')
-REGISTER_QUERY = 'INSERT INTO users VALUES ({}, {})'
+# Constants
+USERS_DB_PATH = os.path.join('data', 'users.db')
+INSERT_USERS_QUERY = 'INSERT INTO users VALUES (?, ?)'
 BLANK_ERROR_MSG = 'Please do not leave any fields blank!'
-CREATE_QUERY = 'CREATE TABLE IF NOT EXISTS users (username TEXT, password TEXT)'
+CREATE_USERS_QUERY = 'CREATE TABLE users (username TEXT PRIMARY KEY, password TEXT)'
 LOGIN_QUERY = 'SELECT * FROM users WHERE username = \'{}\' AND password = \'{}\''
 
-OTHER_DB_PATH = os.path.join('data', 'data2.db')
-CREATE_PLANT_QUERY = 'CREATE TABLE IF NOT EXISTS plants (name TEXT)'
-SEARCH_QUERY = 'SELECT * FROM plants p WHERE p.name LIKE \'%\' || ? || \'%\''
+NOTES_DB_PATH = os.path.join('data', 'notes.db')
+CREATE_NOTE_QUERY = 'CREATE TABLE IF NOT EXISTS notes (name TEXT, content TEXT, user TEXT, private TINYINT)'
+INSERT_NOTE_QUERY = 'INSERT INTO notes VALUES (?, ?, ?, ?)'
+SEARCH_NOTES_QUERY = 'SELECT * FROM notes p WHERE p.name LIKE \'%\' || ? || \'%\''
 
+CHECK_TABLE_EXIST = ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}' '''
 
 # Database methods
 def create_db() -> None:
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
     """Create the database if it does not exist"""
     # Check if database exists
-    with sqlite3.connect(DB_PATH) as db:
-
-        # Create the table if it does not exist
+    with sqlite3.connect(USERS_DB_PATH) as db:
         cur = db.cursor()
-        cur.execute(CREATE_QUERY)
 
-    with sqlite3.connect(OTHER_DB_PATH) as db:
+        cur.execute(CHECK_TABLE_EXIST.format('users'))
+        #if the count is 1, then table exists
+        if cur.fetchone()[0] != 1:
 
-        # Create the table if it does not exist
+            # Create the table
+            cur.execute(CREATE_USERS_QUERY)
+            # Add initial list of users, e.g. admin, user1
+            for (username, password) in initial_users:
+                cur.execute(INSERT_USERS_QUERY, (username, password))
+
+    with sqlite3.connect(NOTES_DB_PATH) as db:
         cur = db.cursor()
-        cur.execute(CREATE_PLANT_QUERY)
+
+        cur.execute(CHECK_TABLE_EXIST.format('notes'))
+        #if the count is 1, then table exists
+        if cur.fetchone()[0] != 1:
+
+            # Create the table
+            cur.execute(CREATE_NOTE_QUERY)
+            # Add initial list notes
+            for (name, desc, user, private) in initial_notes:
+                cur.execute(INSERT_NOTE_QUERY, (name, desc, user, private))
 
 
 @app.route('/')
@@ -40,9 +60,8 @@ def index():
     """The index page for the website"""
     return render_template('index.html')
 
+
 # Reflected XSS Methods
-
-
 @app.route('/rxss', methods=['POST', 'GET'])
 def reflected_xss():
     """Page to showcase Reflected XSS"""
@@ -58,16 +77,16 @@ def reflected_xss():
         return render_template('rxss.html')
 
     # Fetch the data from the database
-    with sqlite3.connect(OTHER_DB_PATH) as db:
+    with sqlite3.connect(NOTES_DB_PATH) as db:
         cur = db.cursor()
 
         # Create the table if not exists
-        cur.execute(CREATE_PLANT_QUERY)
+        cur.execute(CREATE_NOTE_QUERY)
 
         # Search for the plant
 
         # Use prepared statements here to prevent SQLi
-        cur.execute(SEARCH_QUERY, (data['query'],))
+        cur.execute(SEARCH_NOTES_QUERY, (data['query'],))
         results = tuple(map(lambda x: x[0], cur.fetchall()))
 
     return render_template('rxss.html', results=results, query = data['query'])
@@ -115,7 +134,7 @@ def sqli():
         return render_template('sqli.html')
 
     # Check if the entry exists
-    with sqlite3.connect(DB_PATH) as db:
+    with sqlite3.connect(USERS_DB_PATH) as db:
         cursor = db.cursor()
         query = LOGIN_QUERY.format(username, password)
         cursor.execute(query)

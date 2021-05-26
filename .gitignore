@@ -1,2 +1,3 @@
 WebServer/env/*
 .vscode/*
+*.pyc
