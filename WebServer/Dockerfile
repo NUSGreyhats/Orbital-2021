@@ -10,7 +10,10 @@ RUN bash -c "ulimit -S -u 100"
 
 COPY . .
 
+RUN touch bugs.txt && chmod 666 bugs.txt
+
 RUN useradd -ms /bin/bash web
 USER web
+
 
 CMD [ "python3", "__main__.py"]
