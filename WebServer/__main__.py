@@ -1,7 +1,8 @@
 import os
 import sqlite3
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request, flash, session
 from util import FLASK_KEY, initial_users, initial_notes
+from dataclasses import dataclass
 
 # Initialise the application
 app = Flask(__name__)
@@ -20,6 +21,17 @@ INSERT_NOTE_QUERY = 'INSERT INTO notes(name, content, user, private) VALUES (?, 
 SEARCH_NOTES_QUERY = 'SELECT id, name FROM notes p WHERE p.private <> 1 and p.name LIKE \'%\' || ? || \'%\''
 
 CHECK_TABLE_EXIST = ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}' '''
+
+@dataclass
+class Note:
+    id: int
+    name: str
+    content: str
+    user: str
+    private: bool
+
+def result_to_note(tup):
+    return Note(tup[0], tup[1], tup[2], tup[3], tup[4] == 1)
 
 # Database methods
 def create_db() -> None:
@@ -93,13 +105,27 @@ def csrf():
     """Page to showcase CSRF"""
     return render_template('csrf.html')
 
-
-# Stored XSS Methods
-@app.route('/sxss')
-def stored_xss():
+# View a note
+@app.route('/note/<int:id>')
+def view_note(id):
     """Page to showcase Stored XSS"""
-    return render_template('sxss.html')
-
+    with sqlite3.connect(NOTES_DB_PATH) as db:
+        cur = db.cursor()
+        # Search for the note
+        notes = list(map(result_to_note, cur.execute("SELECT * FROM notes WHERE id=?", (id,))))
+        # Check if such a note was found
+        if len(notes) == 0:
+            note = None
+        else:
+            # There should be only one result of the query, since id is unique
+            note = notes[0]
+            # if the note is private
+            if note.private:
+                # check if logged in ('user' in session)
+                # check if the current user is the one who posted this note, else this not is not found
+                if 'user' not in session or note.user != session['user']:
+                    note = None
+    return render_template('note.html', note=note)
 
 # SQLi Methods
 def parse_args(username: str = None, password: str = None, **kwargs):
@@ -144,6 +170,7 @@ def login():
     user = result[0]
 
     # Set a cookie
+    session['user'] = username
     return render_template('logged_in.html', username=user[0], query=query)
 
 
