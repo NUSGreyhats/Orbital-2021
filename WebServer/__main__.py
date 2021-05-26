@@ -122,7 +122,7 @@ def create_note():
         return redirect(f'/note/{id}')
     
 
-# View a note
+# View a note - Stored XSS
 @app.route('/note/<int:id>')
 def view_note(id):
     """Page to showcase Stored XSS"""
@@ -136,12 +136,6 @@ def view_note(id):
         else:
             # There should be only one result of the query, since id is unique
             note = notes[0]
-            # if the note is private
-            if note.private:
-                # check if logged in ('user' in session)
-                # check if the current user is the one who posted this note, else this not is not found
-                if 'user' not in session or note.user != session['user']:
-                    note = None
     return render_template('note.html', note=note)
 
 # SQLi Methods
@@ -149,7 +143,7 @@ def parse_args(username: str = None, password: str = None, **kwargs):
     """Parse the arguments from the user"""
     return username, password
 
-
+# Login - SQLi
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Page to showcase SQL Injection"""
