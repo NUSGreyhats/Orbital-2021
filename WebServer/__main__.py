@@ -105,6 +105,29 @@ def csrf():
     """Page to showcase CSRF"""
     return render_template('csrf.html')
 
+# Create a note
+@app.route('/note/create', methods=['POST', 'GET'])
+def create_note():
+    if 'user' not in session: # not logged in!
+        return redirect('/login')
+
+    # If it is a get request return the webpage
+    if request.method == 'GET':
+        return render_template('create_note.html')
+
+    print(request.form)
+    name = request.form['name']
+    content = request.form['content']
+    private = request.form['private']
+    user = session['user']
+
+    with sqlite3.connect(NOTES_DB_PATH) as db:
+        cur = db.cursor()
+        cur.execute(INSERT_NOTE_QUERY, (name, content, user, private))
+        id = cur.lastrowid
+        return redirect(f'/note/{id}')
+    
+
 # View a note
 @app.route('/note/<int:id>')
 def view_note(id):
