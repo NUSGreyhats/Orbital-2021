@@ -9,6 +9,7 @@
 1. Clone the file into you directory
 1. Run `pip install -r requirements.txt` to install dependencies
 1. Change directory to WebServer
+1. Set the `FLASK_DEBUG` environment variable to `1` if debugging (e.g. `export FLASK_DEBUG=1` (Linux) or `$Env:FLASK_DEBUG = 1` (Powershell))
 1. Run `python3 __main__.py`
 1. The webserver should be running and if you go to [`http://localhost:3000`](http://localhost:3000) you should be able to see the main page of the website.
 
