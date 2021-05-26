@@ -2,7 +2,7 @@
 {% block title %} Reflected XSS {% endblock%}
 {% block content %}
 <h1>Content Search</h1>
-<form class="row g-3" action='/rxss' method="POST">
+<form class="row g-3" action='/search' method="POST">
     <div class="col-auto">
         <label for="searchq" class="visually-hidden">Keywords:</label>
         <input type="text" class="form-control" id="searchq" placeholder="Query", name='query'>
