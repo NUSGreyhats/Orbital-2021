@@ -15,8 +15,8 @@ CREATE_USERS_QUERY = 'CREATE TABLE users (username TEXT PRIMARY KEY, password TE
 LOGIN_QUERY = 'SELECT * FROM users WHERE username = \'{}\' AND password = \'{}\''
 
 NOTES_DB_PATH = os.path.join('data', 'notes.db')
-CREATE_NOTE_QUERY = 'CREATE TABLE IF NOT EXISTS notes (name TEXT, content TEXT, user TEXT, private TINYINT)'
-INSERT_NOTE_QUERY = 'INSERT INTO notes VALUES (?, ?, ?, ?)'
+CREATE_NOTE_QUERY = 'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, content TEXT, user TEXT, private TINYINT)'
+INSERT_NOTE_QUERY = 'INSERT INTO notes(name, content, user, private) VALUES (?, ?, ?, ?)'
 SEARCH_NOTES_QUERY = 'SELECT * FROM notes p WHERE p.name LIKE \'%\' || ? || \'%\''
 
 CHECK_TABLE_EXIST = ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}' '''
@@ -51,8 +51,8 @@ def create_db() -> None:
             # Create the table
             cur.execute(CREATE_NOTE_QUERY)
             # Add initial list notes
-            for (name, desc, user, private) in initial_notes:
-                cur.execute(INSERT_NOTE_QUERY, (name, desc, user, private))
+            for (name, content, user, private) in initial_notes:
+                cur.execute(INSERT_NOTE_QUERY, (name, content, user, private))
 
 
 @app.route('/')
