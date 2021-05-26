@@ -74,29 +74,24 @@ def index():
 
 
 # Reflected XSS Methods
-@app.route('/search', methods=['POST', 'GET'])
-def search():
+@app.route('/gallery', methods=['POST', 'GET'])
+def gallery():
     """Page to showcase Reflected XSS"""
     if request.method == 'GET':
-        return render_template('search.html')
-
-    # Get form data
-    data = request.form
-
-    # Check if input is empty
-    if len(data) == 0 or len(data['query'].strip()) == 0:
-        flash("Data cannot be empty")
-        return render_template('search.html')
+        query = '_' # load everything
+    elif request.method == 'POST':
+        # Get form data
+        query = request.form['query']
 
     # Fetch the data from the database
     with sqlite3.connect(NOTES_DB_PATH) as db:
         cur = db.cursor()
-        # Search for the plant
+        # Search for the notes
         # Use prepared statements here to prevent SQLi
-        cur.execute(SEARCH_NOTES_QUERY, (data['query'],))
-        results = tuple(map(lambda x: (x[0], x[1]), cur.fetchall()))
+        notes = cur.execute(SEARCH_NOTES_QUERY, (query,))
+        results = list(map(lambda x: (x[0], x[1]), notes))
 
-    return render_template('search.html', results=results, query = data['query'])
+    return render_template('gallery.html', results=results, query = query)
 
 
 # CSRF Methods
@@ -115,7 +110,6 @@ def create_note():
     if request.method == 'GET':
         return render_template('create_note.html')
 
-    print(request.form)
     name = request.form['name']
     content = request.form['content']
     private = request.form['private']
