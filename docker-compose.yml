@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+    webserver:
+        build: ./Webserver
+        ports: 
+            - "3000:3000"
