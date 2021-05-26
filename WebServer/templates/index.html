@@ -1,8 +1,21 @@
 {% extends "nav.html" %}
-{% block title %} Sample Orbital Project {% endblock %}
+{% block title %} Notepad-- {% endblock %}
 
 {% block content %}
-<div class='container'>
-    <h1>Sample Website for Home page</h1>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <img class="img-fluid" src="https://stylecaster.com/wp-content/uploads/2014/10/cool-notepads.jpg">
+        </div>
+        <div class="col">
+            <h1>Notepad--</h1>
+            <p>The best notepad webapp on the market.</p>
+            <ul>
+                <li>Unlimited storage</li>
+                <li>Guaranteed security (or else you can sue us)</li>
+            </ul>
+            <p><a href="/login">Login</a> to create notes, <a href="/search">Search</a> for Notes, or view the public <a href="gallery">Gallery</a></p>
+        </div>
+    </div>
 </div>
 {% endblock %}
