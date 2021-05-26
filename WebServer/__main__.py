@@ -1,19 +1,19 @@
 import os
 import sqlite3
 from flask import Flask, render_template, redirect, request, flash, session
-from util import FLASK_KEY, initial_users, initial_notes
+from util import initial_users, initial_notes
 from dataclasses import dataclass
 
 # Initialise the application
 app = Flask(__name__)
-app.secret_key = FLASK_KEY
+app.secret_key = os.urandom(24)
 
 # Constants
 USERS_DB_PATH = os.path.join('data', 'users.db')
 INSERT_USERS_QUERY = 'INSERT INTO users VALUES (?, ?)'
 BLANK_ERROR_MSG = 'Please do not leave any fields blank!'
 CREATE_USERS_QUERY = 'CREATE TABLE users (username TEXT PRIMARY KEY, password TEXT)'
-LOGIN_QUERY = 'SELECT * FROM users WHERE username = \'{}\' AND password = \'{}\''
+LOGIN_QUERY = ''' SELECT * FROM users WHERE username = '{}' AND password = '{}' '''
 
 NOTES_DB_PATH = os.path.join('data', 'notes.db')
 CREATE_NOTE_QUERY = 'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, content TEXT, user TEXT, private TINYINT)'
@@ -188,4 +188,5 @@ def login():
 # Run the website as main
 if __name__ == '__main__':
     create_db()
-    app.run('localhost', 3000, debug=True)
+    port = int(os.environ.get("PORT", 3000))
+    app.run(host='0.0.0.0', port = port)

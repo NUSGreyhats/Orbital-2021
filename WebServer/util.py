@@ -1,5 +1,3 @@
-FLASK_KEY = 'MYSECRETKEY'
-
 initial_users = [('admin', 'passwordthatissupersecret'), ('user1', 'justaplebuserlmao')]
 
 initial_notes = [
