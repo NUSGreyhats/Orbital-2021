@@ -1,3 +1,4 @@
 WebServer/env/*
 .vscode/*
 *.pyc
+bugs.txt

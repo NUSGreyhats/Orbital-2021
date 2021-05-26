@@ -1,0 +1,15 @@
+{% extends 'nav.html' %}
+{% block title %} Report Bugs {% endblock %}
+{% block content %}
+<main class="container border rounded p-5 mt-5">
+    <h1 class="mb-3">Report Bug</h1>
+    <p>As you surely know, <a href="/">Notepad--</a> is super secure. But some bugs <i>might</i> exist. In the one out of a million chance that there is such a bug, please report it!</p>
+    <form method='POST' type='application/json'>
+        <div class="mb-3 form-floating">
+            <textarea type="text" id="bug" class="form-control" placeholder="Details of Bug" name="bug" required="" autofocus="" style="height: 15rem"></textarea>
+            <label for="bug">Details of Bug</label>
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Report</button>
+    </form>
+</main>
+{% endblock %}

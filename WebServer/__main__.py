@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask, render_template, redirect, request, flash, session
 from util import initial_users, initial_notes
 from dataclasses import dataclass
+import subprocess
 
 # Initialise the application
 app = Flask(__name__)
@@ -137,6 +138,22 @@ def view_note(id):
             # There should be only one result of the query, since id is unique
             note = notes[0]
     return render_template('note.html', note=note)
+
+@app.route('/report', methods=['POST', 'GET'])
+def report_bug():
+    """Page to showcase Command Injection"""
+    
+    # If it is a get request return the webpage
+    if request.method == 'GET':
+        return render_template('report.html')
+
+    bug = request.form['bug']
+
+    output = subprocess.check_output(f"echo {bug} >> bugs.txt && echo 'Bug has been reported'", shell=True)
+    flash(output.decode('utf-8'))
+    return redirect('/')
+
+    
 
 # SQLi Methods
 def parse_args(username: str = None, password: str = None, **kwargs):
