@@ -24,7 +24,7 @@
     {% else %}
     <ul class='list-group'>
         {% for result in results%}
-            <li class='list-group-item'>{{ result }}</li>
+            <li class='list-group-item'><a href="/note/{{result[0]}}">{{ result[1] }}</a></li>
         {% endfor %}
     </ul>
     {% endif %}

@@ -17,7 +17,7 @@ LOGIN_QUERY = 'SELECT * FROM users WHERE username = \'{}\' AND password = \'{}\'
 NOTES_DB_PATH = os.path.join('data', 'notes.db')
 CREATE_NOTE_QUERY = 'CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, content TEXT, user TEXT, private TINYINT)'
 INSERT_NOTE_QUERY = 'INSERT INTO notes(name, content, user, private) VALUES (?, ?, ?, ?)'
-SEARCH_NOTES_QUERY = 'SELECT * FROM notes p WHERE p.name LIKE \'%\' || ? || \'%\''
+SEARCH_NOTES_QUERY = 'SELECT id, name FROM notes p WHERE p.private <> 1 and p.name LIKE \'%\' || ? || \'%\''
 
 CHECK_TABLE_EXIST = ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='{}' '''
 
@@ -82,7 +82,7 @@ def search():
         # Search for the plant
         # Use prepared statements here to prevent SQLi
         cur.execute(SEARCH_NOTES_QUERY, (data['query'],))
-        results = tuple(map(lambda x: x[0], cur.fetchall()))
+        results = tuple(map(lambda x: (x[0], x[1]), cur.fetchall()))
 
     return render_template('search.html', results=results, query = data['query'])
 
