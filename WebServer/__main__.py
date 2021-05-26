@@ -105,6 +105,7 @@ def csrf():
 @app.route('/note/create', methods=['POST', 'GET'])
 def create_note():
     if 'user' not in session: # not logged in!
+        flash('Login first to create notes!')
         return redirect('/login')
 
     # If it is a get request return the webpage
