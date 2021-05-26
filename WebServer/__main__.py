@@ -112,26 +112,26 @@ def parse_args(username: str = None, password: str = None, **kwargs):
     return username, password
 
 
-@app.route('/sqli', methods=['GET', 'POST'])
-def sqli():
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     """Page to showcase SQL Injection"""
 
     # If it is a get request return the webpage
     if request.method == 'GET':
-        return render_template('sqli.html')
+        return render_template('login.html')
 
     # Check if the arguments are valid
     data = request.form
     if data == None:
         flash('There is no data')
-        return render_template('sqli.html')
+        return render_template('login.html')
 
     username, password = parse_args(**data)
 
     # Check for empty data
     if None in (username, password):
         flash('Please enter a valid username or password')
-        return render_template('sqli.html')
+        return render_template('login.html')
 
     # Check if the entry exists
     with sqlite3.connect(USERS_DB_PATH) as db:
@@ -143,7 +143,7 @@ def sqli():
     # If there are no users found
     if len(result) == 0:
         flash('Invalid username or password')
-        return render_template('sqli.html')
+        return render_template('login.html')
 
     # Get the matched user
     user = result[0]
