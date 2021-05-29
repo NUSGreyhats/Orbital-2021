@@ -187,8 +187,12 @@ def login():
     with sqlite3.connect(USERS_DB_PATH) as db:
         cursor = db.cursor()
         query = LOGIN_QUERY.format(username, password)
-        cursor.execute(query)
-        result = cursor.fetchall()
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+        except sqlite3.OperationalError as e:
+            flash(f"Error running query: {query} (error = {e})")
+            return render_template('login.html')
 
     # If there are no users found
     if len(result) == 0:
