@@ -114,7 +114,7 @@ def create_note():
 
     name = request.form['name']
     content = request.form['content']
-    private = request.form['private']
+    private = 'private' in request.form
     user = session['user']
 
     with sqlite3.connect(NOTES_DB_PATH) as db:
