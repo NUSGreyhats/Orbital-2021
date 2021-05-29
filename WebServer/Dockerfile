@@ -9,6 +9,7 @@ RUN pip3 install -r requirements.txt
 RUN bash -c "ulimit -S -u 100"
 
 COPY . .
+RUN chmod -R 777 data
 
 RUN touch bugs.txt && chmod 666 bugs.txt
 
