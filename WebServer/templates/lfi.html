@@ -1,0 +1,13 @@
+{% extends 'nav.html' %}
+{% block title %}LFI{% endblock %}
+{% block content %}
+<h1>Sample website for LFI</h1>
+
+<ol>
+    {% for fname in imglist %}
+        <li><a href="{{ fname }}">heh</a></li>
+    {% endfor %}
+</ol>
+
+<p style="font-size:10px; color:antiquewhite;">TODO: I hope people don't stumble across my super_secret_stuff.txt</p>
+{% endblock %}

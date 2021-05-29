@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from flask import Flask, render_template, redirect, request, flash
+from flask.helpers import send_from_directory
 
 # Initialise the application
 app = Flask(__name__)
@@ -78,6 +79,24 @@ def reflected_xss():
 def csrf():
     """Page to showcase CSRF"""
     return render_template('csrf.html')
+
+
+# LFI Methods
+@app.route('/lfi/')
+def lfi():
+    """Page to showcase LFI"""
+    imglist = [x for x in os.listdir("lfi_dir/img/")]
+    return render_template('lfi.html', imglist=imglist)
+
+@app.route('/lfi/<path:path>')
+def lfi_getfile(path: str):
+    """Get file from path"""
+    # Directory traversal limited to lfi_dir/*
+    try:
+        return send_from_directory("lfi_dir/", "img/" + path)
+    except Exception:
+        # Invoke Rick
+        return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
 
 
 # Stored XSS Methods
