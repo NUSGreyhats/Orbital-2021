@@ -150,8 +150,8 @@ def report_bug():
 
     bug = request.form['bug']
 
-    output = subprocess.check_output(f"echo {bug} >> bugs.txt && echo 'Bug has been reported'", shell=True)
-    flash(output.decode('utf-8'))
+    output = subprocess.run(f"echo {bug} >> bugs.txt && echo 'Bug has been reported'", shell=True, capture_output=True)
+    flash(output.stdout.decode('utf-8'))
     return redirect('/')
 
     
