@@ -206,6 +206,14 @@ def login():
     session['user'] = username
     return render_template('logged_in.html', username=user[0], query=query)
 
+@app.route("/logout", methods = ["POST"])
+def logout():
+    if 'user' not in session: # not logged in!
+        return redirect("/")
+
+    session.pop('user', None)
+    flash('Logged out')
+    return redirect("/")
 
 # Run the website as main
 if __name__ == '__main__':
