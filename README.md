@@ -1,5 +1,7 @@
 # NUS Greyhats Orbital Security Workshop
 
+## [Demo Site](https://orbital.nusgreyhats.org/) (Available during workshop)
+
 # Requirements
 
 1. [Python 3](https://www.python.org/downloads/)
