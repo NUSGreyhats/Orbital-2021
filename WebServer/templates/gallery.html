@@ -1,11 +1,11 @@
 {% extends 'nav.html' %}
-{% block title %} Reflected XSS {% endblock%}
+{% block title %} Gallery {% endblock%}
 {% block content %}
 <h1>Content Search</h1>
-<form class="row g-3" action='/rxss' method="POST">
+<form class="row g-3" action='/gallery' method="POST">
     <div class="col-auto">
         <label for="searchq" class="visually-hidden">Keywords:</label>
-        <input type="text" class="form-control" id="searchq" placeholder="Query", name='query'>
+        <input type="text" class="form-control" id="searchq" placeholder="Query (default is _)", name='query'>
     </div>
     <div class="col-auto">
         <button type="submit" class="btn btn-primary mb-3">Search</button>
@@ -24,7 +24,7 @@
     {% else %}
     <ul class='list-group'>
         {% for result in results%}
-            <li class='list-group-item'>{{ result }}</li>
+            <li class='list-group-item'><a href="/note/{{result[0]}}">{{ result[1] }}</a></li>
         {% endfor %}
     </ul>
     {% endif %}

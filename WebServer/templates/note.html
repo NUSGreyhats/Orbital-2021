@@ -1,0 +1,23 @@
+{% extends 'nav.html' %}
+{% block title %} {{note.name}} {% endblock%}
+{% block content %}
+<main class="container border rounded p-5 mt-5">
+    {% if note %}
+        <figure>
+            <blockquote class="blockquote">
+                <h2>{{note.name}}</h2>
+            </blockquote>
+            <figcaption class="blockquote-footer">
+                by <cite>{{note.user}}</cite>
+            </figcaption>
+        </figure>
+
+        {% autoescape false %}
+        <p>{{note.content}}</p>
+        {% endautoescape %}
+    {% else %}
+        <h1>Note not found or inaccessible!</h1>
+    {% endif %}
+
+</main>
+{% endblock %}
