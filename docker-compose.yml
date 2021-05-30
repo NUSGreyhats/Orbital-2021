@@ -5,3 +5,5 @@ services:
         build: ./WebServer
         ports: 
             - "5000:3000"
+        ulimits:
+            nproc: 15
