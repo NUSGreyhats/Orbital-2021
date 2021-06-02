@@ -6,4 +6,4 @@ services:
         ports: 
             - "5000:3000"
         ulimits:
-            nproc: 15
+            nproc: 100
