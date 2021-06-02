@@ -37,7 +37,7 @@ Link to Workshop Slides: [TBD]()
 
 # Extra challenges
 
-Can you figure out how to do the XSS-CSRF chain while the website has a CSRF Token?
+Can you figure out how to do the XSS with the CSRF Token protection in place?
 (Answer is in one of the useful links below)
 
 # Tech Stack
@@ -61,9 +61,8 @@ Can you figure out how to do the XSS-CSRF chain while the website has a CSRF Tok
 1. [SQLi by PortSwigger](https://portswigger.net/web-security/sql-injection)
 1. [SQLi by OWASP](https://owasp.org/www-community/attacks/SQL_Injection)
 
-### XSS CSRF Chaining
-
-1. [XSS CSRF Chaining](https://www.doyler.net/security-not-included/xss-attack-chain)
+### XSS With CSRF Token
+1. [XSS With CSRF Token](https://www.doyler.net/security-not-included/xss-attack-chain)
 
 ### Other Vulnerabilities not covered in this workshop
 
