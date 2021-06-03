@@ -96,11 +96,23 @@ def gallery():
 
 
 # CSRF Methods
-@app.route('/csrf')
-def csrf():
+@app.route('/changepassword')
+def changepassword():
     """Page to showcase CSRF"""
-    return render_template('csrf.html')
+    if 'user' not in session: # not logged in!
+        flash('Login first to change password')
+        return redirect('/login')
 
+    if 'password_new' in request.args: # we changing password bois
+        password_new = request.args['password_new']
+        with sqlite3.connect(USERS_DB_PATH) as db:
+            cursor = db.cursor()
+            cursor.execute("UPDATE users SET password=? WHERE username=?", (password_new, session['user']))
+            flash('Password updated')
+            return render_template('changepassword.html')
+
+    return render_template('changepassword.html')
+    
 # Create a note
 @app.route('/note/create', methods=['POST', 'GET'])
 def create_note():
