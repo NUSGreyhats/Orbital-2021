@@ -4,6 +4,8 @@ from flask import Flask, render_template, redirect, request, flash, session
 from util import initial_users, initial_notes
 from dataclasses import dataclass
 import subprocess
+import random
+import string
 
 # Initialise the application
 app = Flask(__name__)
@@ -109,10 +111,38 @@ def changepassword():
             cursor = db.cursor()
             cursor.execute("UPDATE users SET password=? WHERE username=?", (password_new, session['user']))
             flash('Password updated')
-            return render_template('changepassword.html')
+            return redirect('/')
 
     return render_template('changepassword.html')
     
+# simple CSRF protection
+@app.route('/changepasswordv2')
+def changepasswordv2():
+    """Page to showcase CSRF mitigation"""
+    if 'user' not in session: # not logged in!
+        flash('Login first to change password')
+        return redirect('/login')
+
+    if 'password_new' in request.args: # we changing password bois
+        password_new = request.args['password_new']
+        csrf_token = request.args['csrf_token']
+
+        if 'csrf_token' not in session or csrf_token != session['csrf_token']: # check csrf token
+            flash('CSRF Token mismatch!')
+            return redirect('/')
+
+        session.pop('csrf_token', None)
+        with sqlite3.connect(USERS_DB_PATH) as db:
+            cursor = db.cursor()
+            cursor.execute("UPDATE users SET password=? WHERE username=?", (password_new, session['user']))
+            flash('Password updated')
+            return redirect('/')
+
+    # create a random csrf token
+    session['csrf_token'] = csrf_token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+    return render_template('changepasswordv2.html', csrf_token=csrf_token)
+
 # Create a note
 @app.route('/note/create', methods=['POST', 'GET'])
 def create_note():
