@@ -1,6 +1,7 @@
 # NUS Greyhats Orbital Security Workshop
 
-## [Demo Site](https://orbital.nusgreyhats.org/) (Available during workshop)
+#### [Demo Site](https://orbital.nusgreyhats.org/) (Available during workshop)
+#### [Slides](https://drive.google.com/file/d/1Qbr6GLvqttQXmCQl4WKNFFiPIh7E83JE/view?usp=sharing)
 
 # Requirements
 
@@ -80,4 +81,4 @@ Visit our Official Webpage at [NUS Greyhats](https://nusgreyhats.org/)
 
 If you are a student who is interested in helping out with such activities, do contact us [here](mailto:contact@nusgreyhats.org)
 
-If you are a speaker who is willing to present at our security Wednesdays please contact us [here]()
+If you are a speaker who is willing to present at our security Wednesdays please contact us [here](mailto:contact@nusgreyhats.org)
