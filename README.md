@@ -34,7 +34,7 @@ Showcase vulnerabilites:
 - Other discussions
 - Ads for NUS Greyhats
 
-Link to Workshop Slides: [TBD]()
+Link to Workshop Slides: [here](https://docs.google.com/presentation/d/1Qbr6GLvqttQXmCQl4WKNFFiPIh7E83JE/edit#slide=id.p1)
 
 # Extra challenges
 
